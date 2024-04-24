@@ -34,6 +34,7 @@ socket.on('last-ticket', ( last ) => {
 });
 
 socket.on('follow-ticket', ( { number } ) => {
+    console.log( number );
     lblPendientes.innerText = `Ticket ${ number }`;
 });
 
