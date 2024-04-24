@@ -6,6 +6,8 @@ const socketCont = (socket) => {
     socket.emit('last-ticket', ticketControl.last);
     socket.emit('status-now', ticketControl.lastFour);
 
+    socket.emit('follow-ticket', ticketControl.followTicket());
+
     socket.on('disconnect', () => {});
 
     socket.on('send-message', (payload, callback) => {
@@ -24,6 +26,7 @@ const socketCont = (socket) => {
 
         const ticket = ticketControl.attendTicket(escritorio);
         socket.broadcast.emit('status-now', ticketControl.lastFour);
+        socket.breadcast.emit('follow-ticket', ticketControl.followTicket());
 
 
         if(!ticket){

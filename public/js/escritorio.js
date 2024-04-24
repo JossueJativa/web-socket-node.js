@@ -3,6 +3,7 @@ const lblEscritorio = document.querySelector('h1');
 const btnCrear = document.querySelector('button');
 const lblNuevoTicket = document.querySelector('small');
 const divAlerta = document.querySelector('.alert');
+const lblPendientes = document.querySelector('#lblPendientes');
 
 const searchParam = new URLSearchParams( window.location.search );
 
@@ -30,6 +31,10 @@ socket.on('disconnect', () => {
 
 socket.on('last-ticket', ( last ) => {
     // lblNuevoTicket.innerText = `Ticket ${ last }`;
+});
+
+socket.on('follow-ticket', ( { number } ) => {
+    lblPendientes.innerText = `Ticket ${ number }`;
 });
 
 
