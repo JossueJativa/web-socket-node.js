@@ -1,52 +1,64 @@
-// ref HTML: public/escritorio.html
+
+// Referencias HTML
 const lblEscritorio = document.querySelector('h1');
-const btnCrear = document.querySelector('button');
-const lblNuevoTicket = document.querySelector('small');
-const divAlerta = document.querySelector('.alert');
+const btnAtender    = document.querySelector('button');
+const lblTicket     = document.querySelector('small');
+const divAlerta     = document.querySelector('.alert');
 const lblPendientes = document.querySelector('#lblPendientes');
 
-const searchParam = new URLSearchParams( window.location.search );
 
-if( !searchParam.has('escritorio') ){
+const searchParams = new URLSearchParams( window.location.search );
+
+if ( !searchParams.has('escritorio') ) {
     window.location = 'index.html';
-    throw new Error('El escritorio es necesario');
+    throw new Error('El escritorio es obligatorio');
 }
 
-const escritorio = searchParam.get('escritorio');
+const escritorio = searchParams.get('escritorio');
 lblEscritorio.innerText = escritorio;
 
 divAlerta.style.display = 'none';
 
+
 const socket = io();
 
+
 socket.on('connect', () => {
-    // console.log('Conectado');
-    btnCrear.disabled = false;
+    btnAtender.disabled = false;
 });
 
 socket.on('disconnect', () => {
-    // console.log('Desconectado del servidor');
-    btnCrear.disabled = true;
+    btnAtender.disabled = true;
 });
 
-socket.on('last-ticket', ( last ) => {
-    // lblNuevoTicket.innerText = `Ticket ${ last }`;
-});
+socket.on('tickets-pendientes', ( pendientes ) => {
+    if ( pendientes === 0 ) {
+        lblPendientes.style.display = 'none';
+    } else {
+        lblPendientes.style.display = '';
+        lblPendientes.innerText = pendientes;
+    }
+})
 
-socket.on('follow-ticket', ( { number } ) => {
-    console.log( number );
-    lblPendientes.innerText = `Ticket ${ number }`;
-});
 
+btnAtender.addEventListener( 'click', () => {
+    
 
-btnCrear.addEventListener( 'click', () => {
-    socket.emit( 'attend-ticket', { escritorio }, ( { ok, ticket, msg } ) => {
-        if( !ok ){
-            lblNuevoTicket.innerText = 'Nadie';
+    socket.emit( 'atender-ticket', { escritorio }, ( { ok, ticket, msg } ) => {
+        
+        if ( !ok ) {
+            lblTicket.innerText = 'Nadie.';
             return divAlerta.style.display = '';
         }
-        lblNuevoTicket.innerText = `Ticket ${ ticket.number }`;
+
+        lblTicket.innerText = 'Ticket ' + ticket.numero;
+
     });
+    // socket.emit( 'siguiente-ticket', null, ( ticket ) => {
+    //     lblNuevoTicket.innerText = ticket;
+    // });
+
 });
 
-console.log('Nuevo Ticket HTML');
+
+
