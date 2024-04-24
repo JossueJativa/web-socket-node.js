@@ -23,7 +23,7 @@ const socketCont = (socket) => {
         }
 
         const ticket = ticketControl.attendTicket(escritorio);
-        socket.emit('status-now', ticketControl.lastFour);
+        socket.broadcast.emit('status-now', ticketControl.lastFour);
 
 
         if(!ticket){
