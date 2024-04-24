@@ -26,7 +26,7 @@ const socketCont = (socket) => {
 
         const ticket = ticketControl.attendTicket(escritorio);
         socket.broadcast.emit('status-now', ticketControl.lastFour);
-        socket.breadcast.emit('follow-ticket', ticketControl.followTicket());
+        socket.breadcast.emit('follow-ticket', ticketControl.followTicket.length);
 
 
         if(!ticket){
